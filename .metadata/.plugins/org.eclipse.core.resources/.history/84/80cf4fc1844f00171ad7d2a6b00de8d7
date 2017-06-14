@@ -1,0 +1,57 @@
+package whirlpool.newsletter;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+
+import whirlpool.newsletter.constantes.ConstantesGenerales;
+
+
+
+
+@Path("/newsLetters")
+public class NewsLettersService {
+    	 
+	   @Context
+	   private UriInfo uri;
+	   
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getTrackInJSON() {
+/*		NewsLetters newsLetters = new NewsLetters();
+		newsLetters.setBirthDate("25/12/2017");
+		newsLetters.setCustomerId("111");
+		newsLetters.setFirstName("PrimerNombre");
+		newsLetters.setLastName("LastName");
+		newsLetters.setRegistro("Alguno");
+		newsLetters.setTienda("tienda");*/
+/*		try {
+			FileWriter fw= new FileWriter(f,true);
+			fw.write("prueba2");
+			fw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}*/
+		WritterHelper.getInstance().escribirAlFinal(Propiedades.getInstance().getPathSalida(), "prueabaaa");
+		
+	    return "prueba";	    
+	}
+	
+		@POST
+		@Consumes(MediaType.APPLICATION_JSON)
+		public Response createTrackInJSON(NewsLetters newsLetters) {
+			String result = "Saved : " + newsLetters;
+			return Response.status(201).entity(result).build();
+
+		}
+	}

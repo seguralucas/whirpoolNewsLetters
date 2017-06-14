@@ -1,0 +1,14 @@
+package whirlpool.newsletter.singleton;
+
+public class MapeoCSV {
+	private static MapeoCSV instance;
+	
+	private MapeoCSV(){}
+	
+	public static synchronized MapeoCSV getInstance(){
+		if(instance==null)
+			instance=new MapeoCSV();
+		return instance;
+	}
+	
+}

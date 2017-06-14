@@ -1,0 +1,17 @@
+package whirlpool.newsletter;
+
+public class WritterHelper {
+	
+	private static WritterHelper instance;
+	private WritterHelper(){}
+	
+	public synchronized WritterHelper getInstance(){
+		if(instance==null)
+			instance=new WritterHelper();
+		return instance;			
+	}
+	
+	private synchronized escribirAlFinal(String path, String line){
+		
+	}
+}

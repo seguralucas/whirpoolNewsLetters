@@ -1,0 +1,20 @@
+package whirlpool.newsletter.singleton;
+
+import org.apache.tomcat.jni.File;
+
+import whirlpool.newsletter.constantes.ConstantesGenerales;
+
+public class MapeoCSV {
+	private static MapeoCSV instance;
+
+	private MapeoCSV(){
+		File f= new File(ConstantesGenerales.PATH_MAPEO);
+	}
+	
+	public static synchronized MapeoCSV getInstance(){
+		if(instance==null)
+			instance=new MapeoCSV();
+		return instance;
+	}
+	
+}

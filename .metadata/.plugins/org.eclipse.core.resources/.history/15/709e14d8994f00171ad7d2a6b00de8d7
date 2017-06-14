@@ -1,0 +1,80 @@
+package whirlpool.newsletter.configuracion;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Properties;
+
+import whirlpool.newsletter.WritterHelper;
+import whirlpool.newsletter.constantes.ConstantesGenerales;
+
+
+public class Propiedades {
+
+	private String separadorCSV;
+	private String pathSalida;
+	public Propiedades(){
+
+		
+		Properties prop = new Properties();
+		InputStream input = null;
+
+		try {
+
+			input = new FileInputStream(ConstantesGenerales.PATH_CONFIGURACION);
+			prop.load(input);
+			separadorCSV= prop.getProperty("separadorCSV");
+			pathSalida=prop.getProperty("pathSalida");
+
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			LocalDate dateNow = LocalDate.now();   
+			WritterHelper.getInstance().escribirError(dateNow+"-errorPropiedades.log", "Error al abrir archivo de propiedades");
+		} finally {
+			if (input != null) {
+				try {
+					input.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public String getSeparadorCSV() {
+		return separadorCSV;
+	}
+
+	public void setSeparadorCSV(String separadorCSV) {
+		this.separadorCSV = separadorCSV;
+	}
+	
+	private String completarFechaConCeroAIzquierda(String value){
+		return value.length()<2?"0"+value:value;
+	}
+
+	public String getPathSalida() {
+		LocalDateTime ldt= LocalDateTime.now();
+		pathSalida=pathSalida.replaceAll("YY",completarFechaConCeroAIzquierda(String.valueOf(ldt.getYear())));
+		pathSalida=pathSalida.replaceAll("MM",completarFechaConCeroAIzquierda(String.valueOf(ldt.getMonthValue())));
+		pathSalida=pathSalida.replaceAll("DD",completarFechaConCeroAIzquierda(String.valueOf(ldt.getDayOfMonth())));
+		pathSalida=pathSalida.replaceAll("HH",completarFechaConCeroAIzquierda(String.valueOf(ldt.getHour())));
+		pathSalida=pathSalida.replaceAll("MI",completarFechaConCeroAIzquierda(String.valueOf(ldt.getMinute())));
+		pathSalida=pathSalida.replaceAll("SS",completarFechaConCeroAIzquierda(String.valueOf(ldt.getSecond())));
+		pathSalida=pathSalida.replaceAll("NN",completarFechaConCeroAIzquierda(String.valueOf(ldt.getNano())));
+		return pathSalida;	
+	}
+	
+
+	public void setPathSalida(String pathSalida) {
+		this.pathSalida = pathSalida;
+	}
+	
+	public static void main(String[] args) {
+	//	Propiedades p = new Propiedades();
+		//WritterHelper.getInstance().escribirAlFinal("./salida.csv", "prueba");
+	}
+
+}

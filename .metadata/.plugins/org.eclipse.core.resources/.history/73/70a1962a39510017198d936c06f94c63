@@ -1,0 +1,27 @@
+package whirlpool.newsletter.configuracion;
+
+import java.util.HashMap;
+
+public class IpsSecurity {
+	
+	private static IpsSecurity instance;
+	HashMap<String, Integer> map;
+	private IpsSecurity(){
+		map= new HashMap<String, Integer>();
+	}
+	
+	public synchronized static IpsSecurity getInstance(){
+		if(instance==null)
+			instance= new IpsSecurity();
+		return instance;
+	}
+	
+	public boolean validarIp(String ip){
+		if(!map.containsKey(ip)){
+			map.put(ip, 1);
+			return true;
+		}
+		map.get(ip);
+		return true;
+	}
+}

@@ -1,0 +1,21 @@
+package whirlpool.newsletter;
+
+public class Respuesta {
+	private boolean procesoCorrecto;
+
+	public Respuesta() {
+		super();
+	}
+
+	public boolean isProcesoCorrecto() {
+		return procesoCorrecto;
+	}
+
+	public void setProcesoCorrecto(boolean procesoCorrecto) {
+		this.procesoCorrecto = procesoCorrecto;
+	}
+	
+	
+	
+	
+}

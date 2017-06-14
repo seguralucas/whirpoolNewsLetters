@@ -1,0 +1,69 @@
+package whirlpool.newsletter.servicios;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+
+import whirlpool.newsletter.SFTP;
+import whirlpool.newsletter.WritterHelper;
+import whirlpool.newsletter.configuracion.Propiedades;
+import whirlpool.newsletter.entidades.NewsLetters;
+import whirlpool.newsletter.entidades.Respuesta;
+
+
+
+
+@Path("/newsLetters/kitchenaid")
+public class NewsLettersService {
+    	 
+	   @Context
+	   private UriInfo uri;
+	   
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getTrackInJSON() {
+		NewsLetters newsLetters = new NewsLetters();
+		newsLetters.setBirthDate("25/12/2017");
+		newsLetters.setCustomerId("111");
+		newsLetters.setFirstName("PrimerNombre");
+		newsLetters.setLastName("LastName");
+		newsLetters.setRegistro("Alguno");
+		newsLetters.setTienda("tienda");
+		
+		try{
+			Propiedades p= new Propiedades();
+		WritterHelper.getInstance().escribirCSVJobs(p.getPathSalidaTomcat()+"/"+p.getOutputFile(), newsLetters);
+		SFTP sftp= new SFTP(p.getSftpPropiedades());
+		sftp.transferirFichero(p.getPathSalidaTomcat()+"/"+p.getOutputFile(), p.getOutputPathSFTP()+"/"+p.getOutputFile());
+	    return "salida: "+p.getPathSalidaTomcat()+"/"+p.getOutputFile();	    
+		}
+		catch(Exception e){
+			return e.getMessage();
+		}
+	}
+	
+		@POST
+		@Consumes(MediaType.APPLICATION_JSON)
+		public Response createTrackInJSON(NewsLetters newsLetters) {
+			Respuesta respuesta = new Respuesta();
+			try{
+				Propiedades p= new Propiedades();
+				WritterHelper.getInstance().escribirCSVJobs(p.getPathSalidaTomcat()+"/"+p.getOutputFile(), newsLetters);
+				SFTP sftp= new SFTP(p.getSftpPropiedades());
+				sftp.transferirFichero(p.getPathSalidaTomcat()+"/"+p.getOutputFile(), p.getOutputPathSFTP()+"/"+p.getOutputFile());
+				respuesta.setProcesoCorrecto(true);
+				return Response.status(201).entity(respuesta.toString()).build();
+			}
+			catch(Exception e){
+				respuesta.setProcesoCorrecto(false);
+				return Response.status(400).entity(respuesta.toString()).build();
+			}
+
+		}
+	}

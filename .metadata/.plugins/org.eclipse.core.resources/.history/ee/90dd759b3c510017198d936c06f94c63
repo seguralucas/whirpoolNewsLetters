@@ -1,0 +1,30 @@
+package whirlpool.newsletter.entidades;
+
+public class Respuesta {
+	private boolean procesoCorrecto;
+
+	public Respuesta() {
+		super();
+	}
+
+	public boolean isProcesoCorrecto() {
+		return procesoCorrecto;
+	}
+
+	public void setProcesoCorrecto(boolean procesoCorrecto) {
+		this.procesoCorrecto = procesoCorrecto;
+	}
+
+	public boolean getProcesoCorrecto() {
+		return procesoCorrecto;
+	}
+
+	@Override
+	public String toString() {
+		return "{\"procesoCorrecto\":"+procesoCorrecto+"}";
+	}
+	
+	
+	
+	
+}

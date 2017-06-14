@@ -1,0 +1,12 @@
+instancia=kitchenaid
+
+
+pathSalidaTomcat=H:/apache-tomcat-7.0.76/webapps/letter4/
+urlAllowed="http://kitchenaid.com.co"
+
+user=compracierta_scp
+host=files.dc2.responsys.net
+puerto=22
+keyFile=H:/apache-tomcat-7.0.76/webapps/letter4/Configuracion/server.pem
+outputPathSFTP=/home/cli/compracierta_scp/test
+outputFile=contacts_list_kad_co_YYMMDD_HHMISS.csv

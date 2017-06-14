@@ -1,0 +1,40 @@
+package whirlpool.newsletter.configuracion;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+
+import com.sun.xml.internal.fastinfoset.sax.Properties;
+
+public class IpsSecurity {
+	
+	private static IpsSecurity instance;
+	HashMap<String, Integer> map;
+	private IpsSecurity(){
+		map= new HashMap<String, Integer>();
+	}
+	
+	public synchronized static IpsSecurity getInstance(){
+		if(instance==null)
+			instance= new IpsSecurity();
+		return instance;
+	}
+	
+	public boolean validarIp(String ip){
+		Properties p= new Properties();
+		if(!map.containsKey(ip)){
+			map.put(ip, 1);
+			return true;
+		}
+		Integer cantidadAccesosHoy=map.get(ip);
+		LocalDate ldt= LocalDate.now();
+		return true;
+	}
+	
+	
+	private class IntentosDias{
+		public LocalDate fechaDePrimerIntento;
+		public Integer cantidadIntentos;
+	}
+}
+

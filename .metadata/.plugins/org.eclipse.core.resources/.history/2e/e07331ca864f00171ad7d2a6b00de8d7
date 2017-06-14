@@ -1,0 +1,7 @@
+package whirlpool.newsletter.singleton;
+
+public class MapeoCSV {
+	private static MapeoCSV instancia;
+	
+	
+}

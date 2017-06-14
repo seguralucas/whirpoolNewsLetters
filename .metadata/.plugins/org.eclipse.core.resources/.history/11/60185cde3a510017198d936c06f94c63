@@ -1,0 +1,13 @@
+instancia=kitchenaid
+
+
+pathSalidaTomcat=/opt/bitnami/apache-tomcat/newsLetters
+urlAllowed=http://kitchenaid.com.co
+maximosPedidosPorIrDiario=10
+
+user=compracierta_scp
+host=files.dc2.responsys.net
+puerto=22
+keyFile=/opt/bitnami/apache-tomcat/webapps/Whirlpool/Configuracion/server.pem
+outputPathSFTP=/home/cli/compracierta_scp/test
+outputFile=contacts_list_kad_co_YYMMDD_HHMISS.csv

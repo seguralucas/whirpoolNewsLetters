@@ -1,0 +1,48 @@
+package whirlpool.newsletter.entidades;
+
+public class Respuesta {
+	private boolean procesoCorrecto;
+	private String mensaje;
+	private Integer codigoRespuesta;
+	public Respuesta() {
+		super();
+	}
+
+	public boolean isProcesoCorrecto() {
+		return procesoCorrecto;
+	}
+
+	public void setProcesoCorrecto(boolean procesoCorrecto) {
+		this.procesoCorrecto = procesoCorrecto;
+	}
+
+	public boolean getProcesoCorrecto() {
+		return procesoCorrecto;
+	}
+
+	public String getMensaje() {
+		return mensaje;
+	}
+
+	public void setMensaje(String mensaje) {
+		this.mensaje = mensaje;
+	}
+	
+
+	public Integer getCodigoRespuesta() {
+		return codigoRespuesta;
+	}
+
+	public void setCodigoRespuesta(Integer codigoRespuesta) {
+		this.codigoRespuesta = codigoRespuesta;
+	}
+
+	@Override
+	public String toString() {
+		return "{\"procesoCorrecto\":"+this.isProcesoCorrecto()+", \"mensaje\":\""+this.getMensaje()+"\", \"codigoRespuesta\":"+this.getCodigoRespuesta()+" }";
+	}
+	
+	
+	
+	
+}
