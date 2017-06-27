@@ -77,6 +77,7 @@ public class Propiedades {
 
 	public String getOutputFile() {
 		LocalDateTime ldt= LocalDateTime.now();
+		ldt=ldt.minusDays(1);
 		outputFile=outputFile.replaceAll("YY",completarFechaConCeroAIzquierda(String.valueOf(ldt.getYear())));
 		outputFile=outputFile.replaceAll("MM",completarFechaConCeroAIzquierda(String.valueOf(ldt.getMonthValue())));
 		outputFile=outputFile.replaceAll("DD",completarFechaConCeroAIzquierda(String.valueOf(ldt.getDayOfMonth())));

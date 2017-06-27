@@ -22,7 +22,7 @@ import whirlpool.newsletter.entidades.Respuesta;
 
 
 
-@Path("/newsLetters")
+@Path("/news-letters")
 public class NewsLettersService {
     	 
 	   @Context

@@ -24,12 +24,18 @@ public class CORSFilter implements ContainerResponseFilter {
     public ContainerResponse filter(ContainerRequest request,
             ContainerResponse response) {
     	Propiedades p= new Propiedades();
-//    	List<String> listaOrigenes=request.getRequestHeader("origin");
-	        response.getHttpHeaders().add("Access-Control-Allow-Origin", p.getUrlAllowed());
+    	List<String> listaOrigenes=request.getRequestHeader("origin");
+    	if(listaOrigenes.size()==1 && listaOrigenes.get(0).matches(".*"+p.getUrlAllowed())){
+    		System.out.println("Origen"+listaOrigenes.get(0));
+	        response.getHttpHeaders().add("Access-Control-Allow-Origin", listaOrigenes.get(0));
 	        response.getHttpHeaders().add("Access-Control-Allow-Headers",
 	                "origin, content-type, accept, authorization");
 	        response.getHttpHeaders().add("Access-Control-Allow-Credentials", "true");
 	        response.getHttpHeaders().add("Access-Control-Allow-Methods", "POST");
+    	}
         return response;
     }
+
 }
+
+
