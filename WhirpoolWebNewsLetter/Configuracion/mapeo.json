@@ -1,0 +1,20 @@
+{
+"ProductId"       :"Id Producto",
+"Client"          :"Cliente",
+"Segment"         :"Segmento",
+"Identification"  :"CUIT / DNI",
+"ProductDesc"     :"Producto",
+"Equipment"       :"Equipo",
+"Country"         :"Pa&iacute;s",
+"Province"        :"Provincia",
+"State"           :"Partido",
+"Location"        :"Localidad",
+"Street"          :"Calle",
+"Number"          :"N&uacute;mero",
+"Tower"           :"Complemento Num.",
+"Body"            :"Sucursal",
+"Floor"           :"Cuerpo",
+"Departament"     :"Piso",
+"ComplementNum"	  :"Departamento"
+}
+

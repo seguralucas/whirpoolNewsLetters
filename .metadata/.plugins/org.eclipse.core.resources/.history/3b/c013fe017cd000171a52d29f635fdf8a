@@ -1,0 +1,117 @@
+<%@page import="java.util.Iterator"%>
+<%@page import="org.json.simple.JSONArray"%>
+<%@page import="org.json.simple.JSONObject"%>
+
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<%
+response.addHeader("X-Frame-Options", "ALLOWALL");
+%>        
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge" >
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="https://drive.google.com/uc?export=download&amp;id=0Bzew4I4UXT_JTXRWN29HNjBuMmM">
+</head>
+<body>
+<% 
+String idProd=request.getParameter("idProd");
+String idSucursal=request.getParameter("idSucursal");
+String insertar=request.getParameter("insertar");
+if(insertar==null || insertar.equalsIgnoreCase("true") || idProd.equalsIgnoreCase("null")){
+%>
+<div class="formulario">
+	<form action="<%= request.getRequestURL() %>" method="get">
+	<div class="labelForm">ID de Producto:</div> <div class="divInput"><input type="text" name="idProd" id="idProd"/></div><div class="divSubmitProducto"><input type="submit" class="submitForm" id="sumbitProducto"value="Buscar"/></div>
+	</form>
+</div>
+<div class="formulario">
+	<form action="<%= request.getRequestURL() %>" method="get">
+	<div class="labelForm">Sucursal:</div> <div class="divInput"><input type="text" name="idSucursal" id="idSucursal"/></div><div class="divSubmitSucursal"><input type="submit" class="submitForm" id="submitSucursal" value="Buscar"/></div>
+	</form>
+</div>
+<%
+ }
+%>
+<p>
+<%
+if(idProd!=null && idProd.length()>0 && !idProd.equalsIgnoreCase("null")){
+	if(!idProd.matches("^[0-9]*"))
+		out.write("<div class=\"errorMensaje\">Error, no se puede enviar letras como parametros</div>");
+	else{
+		Respuesta r= HandlerProducto.getJsonProductByIdProduct(idProd);
+		HandlerInteralApis hi= new HandlerInteralApis();
+		if(r.getCodigoRespuesta().equals(HandlerExternalApis.RESPONSE_GET_CODE_OK)){
+			if(r.getDatosRespuesta()!=null){
+				JSONObject jsonCrudo=(JSONObject)r.getDatosRespuesta();
+				if((insertar==null || insertar.equalsIgnoreCase("true")) && hi.existeProductoById(idProd).getDatosRespuesta()!=null)
+					out.write("<div class=\"errorMensaje\">Ya existe un producto con ID: "+ idProd+". Por favor utilice la b&uacute;squeda r&aacute;pida</div>");
+				else{
+					JSONObject jsonMapeado= UtilsJson.mapearJson(jsonCrudo);
+					System.out.println(jsonCrudo);
+					for(Iterator iterator = jsonMapeado.keySet().iterator(); iterator.hasNext();) {
+					    String key = (String) iterator.next();
+						out.write("<div class=\"etiqueta-valor\"><div class=\"etiqueta\"> "+key+":</div> <div class=\"valor\">"+jsonMapeado.get(key)+"</div></div>");
+					}
+					if(insertar==null || insertar.equalsIgnoreCase("true")){
+						Respuesta r2=hi.recuperarOInsertarSucursal(jsonCrudo.get("Tower").toString());
+	
+	
+	/*					if(r2.getCodigoRespuesta().equals(HandlerInteralApis.RESPONSE_GET_CODE_OK)){
+							out.write("Ya existia sucursal con id: "+r2.getDatosRespuesta());
+						}
+						else if(r2.getCodigoRespuesta().equals(HandlerInteralApis.RESPONSE_POST_CODE_OK))
+							out.write("Se inserto la sucursal con ID: "+r2.getDatosRespuesta());*/
+						if(r2.getCodigoRespuesta().equals(HandlerInteralApis.RESPONSE_GET_CODE_OK) || r2.getCodigoRespuesta().equals(HandlerInteralApis.RESPONSE_POST_CODE_OK)){
+						%>
+						<script>
+							window.external.GetCustomObject("CO","Producto").setCustomFieldByName("Id_Producto","<%=idProd%>")
+							window.external.GetCustomObject("CO","Producto").setCustomFieldByName("Sucursal",<%=r2.getDatosRespuesta()%>)
+						</script>
+						<%
+						}
+						else
+							out.write("<div class=\"errorMensaje\">Error en el proceso de b&uacute;squeda/inserci&oacute;n de sucursales</div>");
+					}
+				}
+			}
+			else{
+					out.write("No se encuentra productos con el id: "+idProd);			
+			}
+		}else{
+			out.write("<div class=\"errorMensaje\">Error en la respuesta del producto con id: "+idProd+"<br/>");
+			out.write("Response code: "+r.getCodigoRespuesta()+"<br/>");
+			out.write("Mensaje de error: "+r.getDatosRespuesta().toString()+"</div>");
+		}	
+	}
+}
+
+else if(idSucursal!=null && !idSucursal.equalsIgnoreCase("null") && idSucursal.length()>0){
+	HandlerExternalApis h= new HandlerExternalApis();
+	Respuesta r= h.getProductsBySucursalId(idSucursal);
+	if(r.getCodigoRespuesta().equals(HandlerExternalApis.RESPONSE_GET_CODE_OK)){
+		if(r.getDatosRespuesta()!=null){
+			JSONObject json= (JSONObject)r.getDatosRespuesta();
+			JSONArray jsonArr=((JSONArray)json.get("rows"));
+			for(int i=0; i<jsonArr.size();i++){
+				json=(JSONObject)jsonArr.get(i); 
+					out.write("<div class=\"infoSucursal\"><div class=\"sucursalProductDesc\">"+json.get("ProductDesc")+"</div> <div class=\"sucursalClass\">"+json.get("Class")+"</div> <div class=\"sucursalEquipment\""+json.get("Equipment")+"</div> (id:"+json.get("ProductId")+") <a class=\"linkSucursal\" href=\""+request.getRequestURL()+"?idProd="+json.get("ProductId")+"\">Ver detalle</a></div>");
+			}
+		}
+		else{
+				out.write("<div class=\"errorMensaje\">No se encuentra productos con el id: "+idProd+"</div>");			
+		}
+	}else{
+		out.write("<div class=\"errorMensaje\">Error en la respuesta de los productos con sucursal: con id: "+idSucursal+"<br/>");
+		out.write("Response code: "+r.getCodigoRespuesta()+"<br/>");
+		out.write("Mensaje de error: "+r.getDatosRespuesta().toString()+"</div");
+	}
+}
+%>
+</p>
+
+
+</body>
+</html>

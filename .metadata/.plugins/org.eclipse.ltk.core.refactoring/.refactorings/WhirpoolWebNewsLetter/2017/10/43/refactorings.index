@@ -1,0 +1,22 @@
+1508771207559	Rename type 'HandlerExternalApus'
+1508771550141	Rename method 'executeGet'
+1508776130154	Delete element
+1508777886627	Delete element
+1508777891976	Move file
+1508777940611	Rename resource 'mapeo.jsp'
+1508778420405	Rename resource 'configuracion'
+1508779353611	Rename method 'getMensaje'
+1508779373247	Rename method 'setMensaje'
+1508781728423	Delete element
+1508781758958	Delete element
+1508781771503	Delete element
+1508782658102	Rename type 'MapeoProducto'
+1508782908223	Delete elements
+1508782910636	Move file
+1508782920819	Copy file
+1508785119873	Rename method 'getJsonProduct'
+1508852976932	Delete element
+1508853073137	Delete element
+1508967316803	Copy file
+1508984957078	Rename field 'RESPONSE_CODE_OK'
+1509023537673	Rename local variable 'productId'

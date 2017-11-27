@@ -1,0 +1,47 @@
+package fiber.externalapis;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.Iterator;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import whirlpool.newsletter.constantes.ConstantesGenerales;
+
+public class UtilsJson {
+	public static JSONObject convertirStringToJson(String cadena) throws ParseException{
+		JSONParser parser = new JSONParser();
+		return (JSONObject) parser.parse(cadena);
+	}
+	
+	public static JSONObject convertir(BufferedReader in) throws Exception{
+		StringBuilder builder = new StringBuilder();
+		String line;
+        while ((line = in.readLine()) != null) {
+            builder.append(line);
+        }
+        String jsonString = builder.toString();
+		return convertirStringToJson(jsonString);
+	}
+	
+	public static JSONObject mapearJson(JSONObject json) throws Exception{
+		File f= new File(ConstantesGenerales.PATH_MAPEO);
+		BufferedReader bf= new BufferedReader(new FileReader(f));
+		JSONObject jsonMapeo=UtilsJson.convertir(bf);
+		JSONObject resultado = new JSONObject();
+		for(Iterator iterator = json.keySet().iterator(); iterator.hasNext();) {
+		    String key = (String) iterator.next();
+		    if(jsonMapeo.get(key)!=null)
+		    	resultado.put(jsonMapeo.get(key), json.get(key));    	
+		}
+		return resultado;
+	}
+	
+	public static JSONArray getResultQueryOSvC(JSONObject json){
+		return (JSONArray)((JSONObject)((JSONArray)json.get("items")).get(0)).get("rows");
+	}
+}

@@ -1,0 +1,127 @@
+package fiber.externalapis;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
+
+import fiber.newsletter.constantes.ConstantesGenerales;
+import whirlpool.newsletter.entidades.Respuesta;
+import whirlpool.propiedades.PropiedadesOSvC;
+
+public class HandlerInteralApis {
+			private String URL_BASE="https://fibercorp.custhelp.com/services/rest/connect/v1.3/";
+			public static Integer RESPONSE_GET_CODE_OK=200;
+			public static Integer RESPONSE_POST_CODE_OK=201;
+
+			
+			private Respuesta existeEntidadGenerica(String query){
+				  HttpURLConnection connection = null;
+				  try {
+					String urlEncode=URLEncoder.encode(query, "UTF-8").replace("+", "%20");
+				    URL url = new URL(URL_BASE+"queryResults/?query="+urlEncode);
+				    connection = (HttpURLConnection) url.openConnection();
+				    connection.setRequestMethod("GET");
+				    completarCabecera(connection, UtilsJson.convertirStringToJson(PropiedadesOSvC.getInstance().getCabecera())); 
+				    connection.setUseCaches(false);
+				    connection.setDoOutput(true);
+				    Respuesta r= UtilsWS.empaquetarRespuesta(connection,RESPONSE_GET_CODE_OK);
+				    JSONObject json= (JSONObject)r.getDatosRespuesta();
+				    Long cantidad=(Long)((JSONObject)((JSONArray)json.get("items")).get(0)).get("count");
+				    if(cantidad.compareTo(1l)>=0){
+				    	r.setDatosRespuesta(((JSONArray)(UtilsJson.getResultQueryOSvC(json).get(0))).get(0));
+				    }
+				    else
+				    	r.setDatosRespuesta(null);
+			    	r.setProcesoCorrecto(true);
+				    return r;
+				}
+			   catch (Exception e) {
+				    e.printStackTrace();
+				    return ConstantesGenerales.RESPUESTA_ERROR_PROCESAR;
+				  } finally {
+				    if (connection != null) {
+				      connection.disconnect();
+				    }
+				  }
+			}
+			public Respuesta existeProductoById(String productId) {
+					productId=normalizarCaracteresVarchar(productId);
+					return existeEntidadGenerica("select id from CO.Producto where Id_Producto='"+productId+"'");
+				   
+			}
+			
+			public Respuesta existeSucursalById(String sucursalId) {
+					  sucursalId=normalizarCaracteresVarchar(sucursalId);
+					  return existeEntidadGenerica("select id from organizations where name ='"+sucursalId+"'");			
+			}
+			
+			private String normalizarCaracteresVarchar(String varchar){
+				return varchar.replace("'", "''");
+			}
+			
+			public static void main(String[] args) {
+				HandlerInteralApis h= new HandlerInteralApis();
+				System.out.println(h.recuperarOInsertarSucursal("Tele red SA2"));
+			}
+
+			public Respuesta recuperarOInsertarSucursal(String sucursalId){
+				Respuesta r=existeSucursalById(sucursalId);
+				if(r.getDatosRespuesta()!=null){
+					return r;
+				}
+				JSONObject jsonSucursal= new JSONObject();
+				jsonSucursal.put("name", sucursalId);
+				r= postSucursal(jsonSucursal,"organizations");
+				if(r.getCodigoRespuesta().equals(HandlerInteralApis.RESPONSE_POST_CODE_OK)){
+					jsonSucursal=(JSONObject)r.getDatosRespuesta();
+					r.setDatosRespuesta(jsonSucursal.get("id"));
+				}
+				return r;
+			}
+			
+			public Respuesta postSucursal(JSONObject json,String entidad) {
+				  HttpURLConnection connection = null;
+				  try {
+				    URL url = new URL(URL_BASE+entidad);
+				    connection = (HttpURLConnection) url.openConnection();
+				    connection.setRequestMethod("POST");
+				    connection.setDoOutput(true);
+				    completarCabecera(connection, UtilsJson.convertirStringToJson(PropiedadesOSvC.getInstance().getCabecera())); 
+		        	if(json!=null){
+			        	DataOutputStream wr = new DataOutputStream(
+			        			connection.getOutputStream());
+			        	wr.write(json.toJSONString().getBytes("UTF-8"));
+			        	wr.flush();
+			        	wr.close();
+		        	}
+				    Respuesta r= UtilsWS.empaquetarRespuesta(connection,RESPONSE_POST_CODE_OK);
+				    return r;
+				}
+			   catch (Exception e) {
+				    e.printStackTrace();
+				    return null;
+				  } finally {
+				    if (connection != null) {
+				      connection.disconnect();
+				    }
+				  }
+			}
+			
+			private void completarCabecera(HttpURLConnection conn,JSONObject json) throws Exception{
+				for (Object key : json.keySet()) {
+					if(key instanceof String && json.get(key) instanceof String)
+						conn.setRequestProperty((String) key, (String)json.get(key));
+					
+				}
+			}
+			
+
+}

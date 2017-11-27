@@ -1,0 +1,88 @@
+package fiber.newsletter.servicios;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+
+import fiber.externalapis.HandlerExternalApis;
+import fiber.externalapis.HandlerProducto;
+import fiber.newsletter.entidades.Respuesta;
+
+
+
+
+@Path("/productos")
+public class ProductoService {
+    	 
+	   @Context
+	   private UriInfo uri;
+
+	   
+//		https://apitest.cablevision.com.ar/token?grant_type=client_credentials
+//		{
+//		    "token_type": "bearer",
+//		    "expires_in": 830,
+//		    "access_token": "8e3ea896ce85b737bf3c3654290a948"
+//		}
+	   
+		@GET
+		@Produces(MediaType.APPLICATION_JSON)
+		@Path("idProd/{idProd}")
+		public Response getJsonProductByIdProduct(@PathParam("idProd") String productId,@Context HttpServletRequest requestContex) {
+			try{
+				Respuesta respuesta=HandlerProducto.getJsonProductByIdProduct(productId);
+			return Response.status(respuesta.getCodigoRespuesta()).entity(respuesta.getDatosRespuesta().toString()).build();
+
+			}
+			catch(Exception e){
+				return Response.status(400).entity(e.getMessage()).build();
+			}
+		}
+		
+		@GET
+		@Produces(MediaType.APPLICATION_JSON)
+		@Path("idSucursal/{idSucursal}")
+		public Response getJsonProductByIdSucursalId(@PathParam("idSucursal") String idSucursal,@Context HttpServletRequest requestContex) {
+			HandlerExternalApis h= new HandlerExternalApis();
+			try{
+				Respuesta respuesta= h.getProductsBySucursalId(idSucursal);
+			return Response.status(respuesta.getCodigoRespuesta()).entity(respuesta.getDatosRespuesta().toString()).build();
+
+			}
+			catch(Exception e){
+				return Response.status(400).entity(e.getMessage()).build();
+			}
+		}
+	
+
+	
+/*		@POST
+		@Consumes(MediaType.APPLICATION_JSON)
+		public Response createTrackInJSON(NewsLetters newsLetters,@Context HttpServletRequest requestContex){
+			Propiedades p= new Propiedades();
+			Respuesta respuesta = new Respuesta();
+			if(!IpsSecurity.getInstance().validarIp(requestContex.getRemoteAddr())){
+				respuesta.setProcesoCorrecto(false);
+				respuesta.setMensaje("Has superado el limite de "+p.getMaximosPedidosPorIrDiario()+" requests diarios.");
+				respuesta.setCodigoRespuesta(400);
+			}else{
+				NewsLettersDao newsLettersDao= new NewsLettersDao();
+				respuesta= newsLettersDao.crearYSubirCSV(newsLetters);
+			}
+			return Response.status(respuesta.getCodigoRespuesta()).entity(respuesta.toString()).build();
+		
+		}*/
+	}

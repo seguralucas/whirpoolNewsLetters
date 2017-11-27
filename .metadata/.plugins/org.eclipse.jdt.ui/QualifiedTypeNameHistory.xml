@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="java.lang.Exception"/>
+<fullyQualifiedTypeName name="javax.servlet.http.HttpServletRequest"/>
+<fullyQualifiedTypeName name="javax.ws.rs.core.HttpHeaders"/>
+<fullyQualifiedTypeName name="java.util.HashMap"/>
+<fullyQualifiedTypeName name="com.sun.xml.internal.fastinfoset.sax.Properties"/>
+<fullyQualifiedTypeName name="whirlpool.newsletter.configuracion.IpsSecurity.IntentosDias"/>
+<fullyQualifiedTypeName name="java.time.LocalDate"/>
+<fullyQualifiedTypeName name="whirlpool.newsletter.configuracion.Propiedades"/>
+<fullyQualifiedTypeName name="whirlpool.newsletter.entidades.Respuesta"/>
+<fullyQualifiedTypeName name="whirlpool.newsletter.configuracion.IpsSecurity"/>
+<fullyQualifiedTypeName name="whirlpool.newsletter.entidades.NewsLettersDao"/>
+<fullyQualifiedTypeName name="whirlpool.newsletter.entidades.NewsLetters"/>
+<fullyQualifiedTypeName name="com.jcraft.jsch.Buffer"/>
+<fullyQualifiedTypeName name="whirlpool.newsletter.WritterHelper"/>
+<fullyQualifiedTypeName name="com.fasterxml.jackson.databind.ObjectMapper"/>
+<fullyQualifiedTypeName name="fiber.propiedades.PropiedadesFiberWS"/>
+</qualifiedTypeNameHistroy>

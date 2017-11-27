@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="WhirpoolWebNewsLetter">
-        <property name="context-root" value="WhirpoolWebNewsLetter"/>
-        <property name="java-output-path" value="/WhirpoolWebNewsLetter/build/classes"/>
-    </wb-module>
-</project-modules>

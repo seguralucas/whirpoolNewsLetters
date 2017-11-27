@@ -1,0 +1,39 @@
+package fiber.externalapis;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+
+import org.json.simple.parser.ParseException;
+
+import whirlpool.newsletter.entidades.Respuesta;
+
+public class UtilsWS {
+	
+	public static Respuesta empaquetarRespuesta(HttpURLConnection connection, Integer correctResponse) throws IOException, ParseException{
+        int responseCode = connection.getResponseCode();
+        BufferedReader in;
+        if(responseCode == correctResponse){
+        	in = new BufferedReader(
+	                    new InputStreamReader(connection.getInputStream()));
+        }
+        else{
+        	in = new BufferedReader(
+	                    new InputStreamReader(connection.getErrorStream()));
+        }            
+		    StringBuilder response = new StringBuilder(); // or StringBuffer if Java version 5+
+		    String line;
+		    while ((line = in.readLine()) != null) {
+		      response.append(line);
+		      System.out.println(line);
+		      response.append('\r');
+		    }
+		    in.close();
+		    Respuesta r = new Respuesta();
+		    r.setDatosRespuesta(UtilsJson.convertirStringToJson(response.toString()));
+		    r.setCodigoRespuesta(responseCode);
+		    r.setProcesoCorrecto(true);
+		    return r;
+		  }	
+}
